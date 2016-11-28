@@ -20,23 +20,29 @@ if(message.content.startsWith(prefix+"say")){bot.createMessage(message.channel.i
 
 if(message.content.startsWith(prefix+"coinFlip")){
   let flipTimes = message.content.split(" ").slice(1).join(" ");
-  if (flipTimes > 10){bot.createMessage(message.channel.id, "Please use a number less than or equal to 10");return;}
+  if(isNaN(flipTimes)){bot.createMessage(message.channel.id, "I need a number");return;} 
+  if (flipTimes > 10 || flipTimes < 1){bot.createMessage(message.channel.id, "Please use a number between 1 and 10");return;}
   if(flipTimes.length == 0){
     let math = Math.floor((Math.random() * 10) + 1);
     if(math >= 5){bot.createMessage(message.channel.id, "Heads");} else{bot.createMessage(message.channel.id,"Tails");return;}
   }else{
     let i = 1;
     let result = `Results of the ${flipTimes} coin flips\n\n`;
+    let a = 0;
+    let b = 0;
     for(i;i<=flipTimes;i++){
       let math = Math.floor((Math.random() * 10) + 1);
       if (math >= 5){
-        var coinResult = "Heads";
+          var coinResult = "Heads";
+          a++;
+        }else{
+          var coinResult = "Tails";
+          b++;
         }
-        else
-        {var coinResult = "Tails";}
+
         result += `${i}) ${coinResult}\n`
       }
-    bot.createMessage(message.channel.id, result);
+    bot.createMessage(message.channel.id, result + `\nTotal\nHeads: ${a}\nTails: ${b}`);
     }
   }
 });
