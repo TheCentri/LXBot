@@ -15,12 +15,21 @@ bot.on('messageCreate', (message) =>{
 if(message.author.bot)return;
 let prefix = "~";
 let input = message.content.toLowerCase();
-if(response[input]){bot.createMessage(message.channel.id, response[input]);}
+if(response[input]){bot.createMessage(message.channel.id, response[input])}
 if(message.content.startsWith(prefix+"say")){bot.createMessage(message.channel.id, message.content.split(" ").slice(1).join(" "));}
 
-if(message.content.startsWith(prefix+"coinFlip")){
+console.log(input);
+
+if(message.content.startsWith(prefix+"addcomm")){
+  let newCommand = message.content.split(" ").replace(1, prefix).join(" ");
+  console.log(newCommand);
+
+
+}
+
+if(input == (prefix+"coinflip")){
   let flipTimes = message.content.split(" ").slice(1).join(" ");
-  if(isNaN(flipTimes)){bot.createMessage(message.channel.id, "I need a number");return;} 
+  if(isNaN(flipTimes)){bot.createMessage(message.channel.id, "I need a number");return;}
   if (flipTimes > 10 || flipTimes < 1){bot.createMessage(message.channel.id, "Please use a number between 1 and 10");return;}
   if(flipTimes.length == 0){
     let math = Math.floor((Math.random() * 10) + 1);
