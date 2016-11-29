@@ -14,12 +14,23 @@ console.log("Ready");
 
 bot.on('messageCreate', (message) =>{
 if(message.author.bot)return;
-let prefix = "~";
-let input = message.content.toLowerCase();
-if(response[input]){bot.createMessage(message.channel.id, response[input]);}
+var prefix = "~";
+var input = message.content.toLowerCase();
+if(response[input]){bot.createMessage(message.channel.id, response[input])}
 if(message.content.startsWith(prefix+"say")){bot.createMessage(message.channel.id, message.content.split(" ").slice(1).join(" "));}
 
-if(message.content.startsWith(prefix+"coinFlip")){
+if(message.content.startsWith(prefix+"addcomm")){
+  let command = message.content.split(" ").slice(1);
+  let key = JSON.stringify(prefix+command[0]);
+  let value = JSON.stringify(message.content.split(" ").slice(2).join(" "));
+  let newCommand = key+":"+value;
+  let a = JSON.stringify(response)
+  a = a.substring(0, a.length - 1);
+  let file = fs.createWriteStream('./responses/response.json');
+  file.write(a+","+newCommand+`\n}`);
+}
+
+if(input == (prefix+"coinflip")){
   let flipTimes = message.content.split(" ").slice(1).join(" ");
   if(isNaN(flipTimes)){bot.createMessage(message.channel.id, "I need a number");return;}
   if (flipTimes > 10 || flipTimes < 1){bot.createMessage(message.channel.id, "Please use a number between 1 and 10");return;}
@@ -69,5 +80,6 @@ if(message.content.startsWith(prefix+"coinFlip")){
     }});}})};
 
 });
+
 
 bot.connect();
