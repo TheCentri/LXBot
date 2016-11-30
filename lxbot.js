@@ -25,7 +25,8 @@ if(command.toLowerCase() == (prefix+"addalias")){
   let a = JSON.stringify(response)
   a = a.substring(0, a.length - 1);
   let file = fs.createWriteStream('./responses/response.json');
-  file.write(a+","+newCommand+`\n}`);
+  file.write(a+`\n,`+newCommand+`\n}`);
+  message.channel.sendMessage("Added command :ok_hand:");
 }
 if(command.toLowerCase() == (prefix+"coinflip")){
   let flipTimes = message.content.split(" ").slice(1).join(" ");
@@ -83,7 +84,7 @@ if(command.toLowerCase() == (prefix+"imdb")){
           if(obj.Title == undefined){message.channel.sendMessage("Unknown Movie or Show");return;}
           message.channel.sendMessage(`**IMDB Info**\n\n**Title:** ${obj.Title}\n**Year:** ${obj.Year}\n**Rating:** ${obj.Rated}\n**Plot:** ${obj.Plot}`);
         }});}
-if(command.toLowerCase() == (prefix+"searchimdb")){
+if(command.toLowerCase() == (prefix+"imdbsearch")){
                   let media = message.content.split(" ").slice(1).join("+");
                   if (media.length === 0){message.channel.sendMessage("I need search parameters");return;}
                   let imbdURL = `http://www.omdbapi.com/?s=${media}&y=&plot=full&r=json`;
