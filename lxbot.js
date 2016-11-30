@@ -9,7 +9,7 @@ const bot = new Discord.Client();
 bot.on('ready',() =>{
 console.log(timestamp('YYYY:MM:DD:mm')+"Ready");
 });
-
+//testing auto pull on server
 bot.on('message', message => {
   if(message.author.bot)return;
   let prefix = "~";
