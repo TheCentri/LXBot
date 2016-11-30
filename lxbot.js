@@ -110,6 +110,23 @@ if(command.toLowerCase() == (prefix+"searchimdb")){
                     }else{
                       message.channel.sendMessage("No results found");
                     }})}
+if(message.content.startsWith(prefix + "clear")){
+      if(message.author.id !== config.owner){message.reply("You do not have permissions to run this command"); return;}
+      let messageCount = message.content.split(" ").slice(1);
+      if (messageCount.length === 0) {message.channel.sendMessage("I need to know how many messages to delete"); return;}
+      if (isNaN(messageCount)== true) {message.channel.sendMessage("I need a number"); return;}
+      if (isNaN(messageCount)== false) {
+        let time = timeStamp('YYYY:MM:DD:mm');
+        fs.appendFile('./logs/messageDeletion.txt',`${time} Deleted ${messageCount} messages in the channel ${message.channel} by the request of ${message.author}\n`, function(err){
+          if(err){
+            console.log(err);
+          }
+        });
+        messageCount++;
+        message.channel.fetchMessages({limit: messageCount})
+        .then(messages => message.channel.bulkDelete(messages));
+    }}
+
 });
 
 
