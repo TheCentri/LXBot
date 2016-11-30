@@ -18,7 +18,7 @@ bot.on('message', message => {
 if(response[input]){message.channel.sendMessage(response[input])}
 if(command.toLowerCase() == (prefix+"say")){message.channel.sendMessage(message.content.split(" ").slice(1).join(" "));}
 if(command.toLowerCase() == (prefix+"showcommands")){message.channel.sendMessage(JSON.stringify(response));}
-if(command.toLowerCase() == (prefix+"addalias")){
+if(command.toLowerCase() == (prefix+"newalias")){
   let command = message.content.split(" ").slice(1);
   let key = JSON.stringify(prefix+command[0]);
   let value = JSON.stringify(message.content.split(" ").slice(2).join(" "));;
