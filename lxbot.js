@@ -7,7 +7,7 @@ const Discord = require('discord.js');
 const bot = new Discord.Client();
 
 bot.on('ready',() =>{
-console.log(timestamp('YYYY:MM:DD:mm')+"Ready");
+console.log(timeStamp('YYYY:MM:DD:mm')+"Ready");
 });
 bot.on('message', message => {
   if(message.author.bot)return;
