@@ -9,7 +9,6 @@ const bot = new Discord.Client();
 bot.on('ready',() =>{
 console.log(timestamp('YYYY:MM:DD:mm')+"Ready");
 });
-//testing auto pull on server
 bot.on('message', message => {
   if(message.author.bot)return;
   let prefix = "~";
@@ -18,10 +17,9 @@ bot.on('message', message => {
   command = command[0];
 if(response[input]){message.channel.sendMessage(response[input])}
 if(command.toLowerCase() == (prefix+"say")){message.channel.sendMessage(message.content.split(" ").slice(1).join(" "));}
-if(command.toLowerCase() == (prefix+"addcomm")){
+if(command.toLowerCase() == (prefix+"addalias")){
   let command = message.content.split(" ").slice(1);
   let key = JSON.stringify(prefix+command[0]);
-  console.log(key);
   let value = JSON.stringify(message.content.split(" ").slice(2).join(" "));;
   let newCommand = key.toLowerCase()+":"+value;
   let a = JSON.stringify(response)
