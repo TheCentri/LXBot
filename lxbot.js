@@ -17,15 +17,7 @@ bot.on('message', message => {
   let command = message.content.split(" ");
   command = command[0];
 if(response[input]){message.channel.sendMessage(response[input])}
-if(message.content.startsWith(prefix+"say")){message.channel.sendMessage(message.content.split(" ").slice(1).join(" "));}
-if(command.toLowerCase() == (prefix+'eval')){
-              if (message.author.bot) return;
-              if (message.author.id !== config.owner){message.reply("You do not have permissions to run this command");return;}
-              if (message.author.id === config.owner){
-                const evalCommand = message.content.split(' ').slice(1).join(' ');
-                  message.reply(`\`\`\`${eval(evalCommand)}\`\`\``);}
-}
-
+if(command.toLowerCase() == (prefix+"say")){message.channel.sendMessage(message.content.split(" ").slice(1).join(" "));}
 if(command.toLowerCase() == (prefix+"addcomm")){
   let command = message.content.split(" ").slice(1);
   let key = JSON.stringify(prefix+command[0]);
@@ -81,7 +73,7 @@ if(command.toLowerCase() == (prefix+"weather")){
                `**Weather for today in  ${arg.results[0].address_components[1].long_name}:** ${forecast.hourly.data[0].summary}\n\n`+
                `Tempature: ${forecast.hourly.data[0].apparentTemperature} F\n`+
                `Humidity: ${forecast.hourly.data[0].humidity}\n`+
-               `Wind Speed: ${forecast.hourly.data[0].windSpeed} MPH\n`+
+               `Wind Speed: ${forecast.hourly.data[0].windSpeed} Mph\n`+
                `Visibility: ${forecast.hourly.data[0].visibility} Miles`)
 }});}})};
 if(command.toLowerCase() == (prefix+"imdb")){
@@ -110,7 +102,7 @@ if(command.toLowerCase() == (prefix+"searchimdb")){
                     }else{
                       message.channel.sendMessage("No results found");
                     }})}
-if(message.content.startsWith(prefix + "clear")){
+if(command.toLowerCase() == (prefix+"clear")){
       if(message.author.id !== config.owner){message.reply("You do not have permissions to run this command"); return;}
       let messageCount = message.content.split(" ").slice(1);
       if (messageCount.length === 0) {message.channel.sendMessage("I need to know how many messages to delete"); return;}
@@ -126,8 +118,13 @@ if(message.content.startsWith(prefix + "clear")){
         message.channel.fetchMessages({limit: messageCount})
         .then(messages => message.channel.bulkDelete(messages));
     }}
-
+if(command.toLowerCase() == (prefix+'eval')){
+              if (message.author.bot) return;
+              if (message.author.id !== config.owner){message.reply("You do not have permissions to run this command");return;}
+              if (message.author.id === config.owner){
+                const evalCommand = message.content.split(' ').slice(1).join(' ');
+                  message.reply(`\`\`\`${eval(evalCommand)}\`\`\``);}
+} 
 });
-
 
 bot.login(config.token);

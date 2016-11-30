@@ -1,3 +1,2 @@
-./config/config.json
-./logs/MessageDeletion.txt
-./responses/response.json
+*.json
+/logs/
