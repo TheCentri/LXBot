@@ -17,6 +17,7 @@ bot.on('message', message => {
   command = command[0];
 if(response[input]){message.channel.sendMessage(response[input])}
 if(command.toLowerCase() == (prefix+"say")){message.channel.sendMessage(message.content.split(" ").slice(1).join(" "));}
+if(command.toLowerCase() == (prefix+"showcommands")){message.channel.sendMessage(JSON.stringify(response));}
 if(command.toLowerCase() == (prefix+"addalias")){
   let command = message.content.split(" ").slice(1);
   let key = JSON.stringify(prefix+command[0]);
@@ -26,16 +27,15 @@ if(command.toLowerCase() == (prefix+"addalias")){
   a = a.substring(0, a.length - 1);
   let file = fs.createWriteStream('./responses/response.json');
   file.write(a+`\n,`+newCommand+`\n}`);
-  message.channel.sendMessage("Added command :ok_hand:");
 }
 if(command.toLowerCase() == (prefix+"coinflip")){
   let flipTimes = message.content.split(" ").slice(1).join(" ");
   if(isNaN(flipTimes)){message.channel.sendMessage("I need a number");return;}
   if (flipTimes > 10 || flipTimes < 1){message.channel.sendMessage("Please use a number between 1 and 10");return;}
-  if(flipTimes.length == 0){
+  if(flipTimes.length == 0 || flipTimes == 1){
     let math = Math.floor((Math.random() * 10) + 1);
     if(math >= 5){message.channel.sendMessage("Heads");} else{message.channel.sendMessage("Tails");return;}
-  }else{
+  }else if(flipTimes>=2){
     let i = 1;
     let result = `Results of the ${flipTimes} coin flips\n\n`;
     let a = 0;
