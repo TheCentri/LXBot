@@ -52,8 +52,8 @@ command.coinflip = {
 
   }
 }
-command.newalias = {
-  "Name":`${prefix}newalias`,
+command.addcomm = {
+  "Name":`${prefix}addcomm`,
   "Useage":"Adds a new command",
   "process": function(bot, message){
   let command = message.content.split(" ").slice(1);
@@ -159,4 +159,12 @@ command.eval = {
       message.reply(`\`\`\`${eval(evalCommand)}\`\`\``);}
   }
 }
+command.voice = {
+    "Name":`${prefix}voice`,
+    "Useage":"Used to join the bot to a voice channel",
+    "process" function(bot, message){
+        if()
+    }
+}
+
 module.exports = command
