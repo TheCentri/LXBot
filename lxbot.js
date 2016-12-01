@@ -6,9 +6,8 @@ const bot = new Discord.Client();
 
 
 bot.on('ready',() =>{
-console.log("Ready");
+console.log(timeStamp('YYYY:MM:DD:mm')+"Ready");
 });
-
 bot.on('message', message => {
   if(message.author.bot)return;
   if(!message.content.startsWith('~')){return;}
@@ -19,6 +18,5 @@ bot.on('message', message => {
   if(response[input]){message.channel.sendMessage(response[input]);return;}
   if(cmd.Name){cmd.process(bot, message, command);}else{return;}
 });
-
 
 bot.login(config.token);
