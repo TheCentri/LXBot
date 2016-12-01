@@ -2,11 +2,12 @@ const config =  require('./config/config.json');
 const commands = require('./commands.js');
 const response = require('./responses/response.json');
 const Discord = require('discord.js');
+const timeStamp = require('time-stamp');
 const bot = new Discord.Client();
 
 
 bot.on('ready',() =>{
-console.log(timeStamp('YYYY:MM:DD:mm')+"Ready");
+console.log(timeStamp('YYYY:MM:DD:mm')+" Ready");
 });
 bot.on('message', message => {
   if(message.author.bot)return;
