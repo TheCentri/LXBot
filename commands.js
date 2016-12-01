@@ -118,7 +118,7 @@ command.imdbsearch = {
                      let results = `**Showing top results from ${obj.totalResults} Results**\n\n`
                      let i = 1;
                      for(i in obj.Search){
-                       results += `**${parseInt(i)+1}):**  ${obj.Search[i].Title} *(${obj.Search[i].Year}) IMDB ID:  ${obj.Search[i].imdbID}*\n`;
+                       results += `**${parseInt(i)+1}):**  ${obj.Search[i].Title} (${obj.Search[i].Year}) IMDB ID:  ${obj.Search[i].imdbID}\n`;
                        i++
                      }
                      message.channel.sendMessage(results);
@@ -158,6 +158,18 @@ command.eval = {
       const evalCommand = message.content.split(' ').slice(1).join(' ');
       message.reply(`\`\`\`${eval(evalCommand)}\`\`\``);}
   }
+}
+command.showcommands = {
+    "Name":`${prefix}showcommands`,
+    "Useage":"shows all the custom added commands",
+    "process": function(bot, message){
+        for(i in response){
+            var list;
+            list += `\n${i} : ${response[i]}`;
+            i++
+        }
+message.channel.sendMessage("```"+`${list}`+"```");
+    }
 }
 
 module.exports = command
