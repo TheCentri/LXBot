@@ -159,12 +159,5 @@ command.eval = {
       message.reply(`\`\`\`${eval(evalCommand)}\`\`\``);}
   }
 }
-command.voice = {
-    "Name":`${prefix}voice`,
-    "Useage":"Used to join the bot to a voice channel",
-    "process" function(bot, message){
-        if()
-    }
-}
 
 module.exports = command
