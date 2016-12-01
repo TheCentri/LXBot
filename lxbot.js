@@ -14,7 +14,7 @@ bot.on('message', message => {
   if(!message.content.startsWith('~')){return;}
   var input = message.content.split(" ")
   var command = message.content.slice(1).split(" ");
-  command = command[0];
+  command = command[0].toLowerCase();
   let cmd = commands[command];
   if(response[input]){message.channel.sendMessage(response[input]);return;}
   if(cmd.Name){cmd.process(bot, message, command);}else{return;}
