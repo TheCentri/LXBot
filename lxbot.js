@@ -12,11 +12,14 @@ console.log(timeStamp('YYYY:MM:DD:mm')+" Ready");
 bot.on('message', message => {
   if(message.author.bot)return;
   if(!message.content.startsWith('~')){return;}
-  var input = message.content.split(" ")
-  var command = message.content.slice(1).split(" ");
+  let input = message.content.split(" ")
+  let command = message.content.slice(1).split(" ");
   command = command[0].toLowerCase();
-  let cmd = commands[command];
   if(response[input]){message.channel.sendMessage(response[input]);return;}
+  let cmd = commands[command];
+    try{
+        cmd.Name;
+    }catch(e){return;}
   if(cmd.Name){cmd.process(bot, message, command);}else{return;}
 });
 
