@@ -17,14 +17,14 @@ command.ping = {
 };
 command.say = {
   "Name":`${prefix}say`,
-  "Useage":"Echos your message",
+  "Useage":"Bot will repeat your message",
   "process": function(bot, message){
     message.channel.sendMessage(message.content.split(" ").slice(1).join(" "));
   }
 };
 command.coinflip = {
   "Name":`${prefix}coinflip`,
-  "Useage":"FLips a coin",
+  "Useage":"Flips a coin up to 10 times",
   "process": function(bot,message){
   let flipTimes = message.content.split(" ").slice(1).join(" ");
   if(isNaN(flipTimes)){message.channel.sendMessage("I need a number");return;}
@@ -70,7 +70,7 @@ command.addcomm = {
 };
 command.weather = {
   "Name":`${prefix}weather`,
-  "Useage":"Used to look up the weather, ex: ~weather New York",
+  "Useage":"Weather lookup",
   "process":function(bot, message){
     let address = message.content.split(" ").slice(1).join("+");
     let geocodeURL= `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${config.geocodeToken}`;
@@ -95,43 +95,44 @@ command.weather = {
 };
 command.imdb = {
   "Name":`${prefix}imdb`,
-  "Useage":"Looks up movie/TV show by name",
+  "Useage":"Looks up Movie or TV show by name",
   "process": function(bot, message){
-    let media = message.content.split(" ").slice(1).join("+");
-    let imbdURL = `http://www.omdbapi.com/?t=${media}&y=&plot=full&r=json`;
-    request(imbdURL, function(error,response,body){
-      if(!error && response.statusCode == 200){
-        let obj = JSON.parse(body);
-        if(obj.Title == undefined){message.channel.sendMessage("Unknown Movie or Show");return;}
-        message.channel.sendMessage(`**IMDB Info**\n\n**Title:** ${obj.Title}\n**Year:** ${obj.Year}\n**Rating:** ${obj.Rated}\n**Plot:** ${obj.Plot}`);
-  }});
-  }
-};
-command.imdbsearch = {
-  "Name":`${prefix}imdbsearch`,
-  "useage":"Searches the imdb database",
-  "process": function(bot, message){
-    let media = message.content.split(" ").slice(1).join("+");
-    if (media.length === 0){message.channel.sendMessage("I need search parameters");return;}
-    let imbdURL = `http://www.omdbapi.com/?s=${media}&y=&plot=full&r=json`;
-    request(imbdURL, function(error,response,body){
-      if(!error && response.statusCode == 200){
-        let obj = JSON.parse(body);
-        let results = `**Showing top results from ${obj.totalResults} Results**\n\n`;
-        let i = 1;
-        for(i in obj.Search){
-          results += `**${parseInt(i)+1}):**  ${obj.Search[i].Title} (${obj.Search[i].Year}) IMDB ID:  ${obj.Search[i].imdbID}\n`;
-          i++;
-        }
-        message.channel.sendMessage(results);
+    var args = message.content.toLowerCase().split(" ").splice(1);
+    if(args[0]!=="search"){
+      let media = args.join("+");
+      let imbdURL = `http://www.omdbapi.com/?t=${media}&y=&plot=full&r=json`;
+      request(imbdURL, function(error,response,body){
+        if(!error && response.statusCode == 200){
+          let obj = JSON.parse(body);
+          if(obj.Response == "False"){message.channel.sendMessage("Unknown Movie or Show");return;}
+          message.channel.sendMessage(`**IMDB Info**\n\n**Title:** ${obj.Title}\n**Year:** ${obj.Year}\n**Rating:** ${obj.Rated}\n**Plot:** ${obj.Plot}`);
+      }});
+    }
+    else if(args[0] == 'search'){
+        let media = message.content.split(" ").slice(2).join("+");
+        if (media.length === 0){message.channel.sendMessage("I need search parameters");return;}
+        let imbdURL = `http://www.omdbapi.com/?s=${media}&y=&plot=full&r=json`;
+        request(imbdURL, function(error,response,body){
+        if(!error && response.statusCode == 200){
+          let obj = JSON.parse(body);
+          if(obj.Response == "False"){message.channel.sendMessage("Unknown Movie or Show");return;}
+          let results = `**Showing top results from ${obj.totalResults} Results**\n\n`;
+          let i = 1;
+          for(i in obj.Search){
+            results += `**${parseInt(i)+1}):**  ${obj.Search[i].Title} (${obj.Search[i].Year}) IMDB ID:  ${obj.Search[i].imdbID}\n`;
+            i++;
+          }
+          message.channel.sendMessage(results);
         }else{message.channel.sendMessage("No results found");
         }
       });
   }
+    
+  }
 };
 command.clear = {
   "Name":`${prefix}clear`,
-  "Useage":"Bulk deletes messages",
+  "Useage":"Deletes multiple messages",
   "process": function(bot,message){
     if(message.author.id !== config.owner){message.reply("You do not have permissions to run this command"); return;}
     let messageCount = message.content.split(" ").slice(1);
@@ -185,12 +186,12 @@ command.music = {
       var voice = message.member.voiceChannel;
       if(voice == undefined){message.reply("You need to be in a voice channel first");
         }else if(message.guild.voiceConnection){message.channel.sendMessage("I'm already in a voice channel");
-        }else {message.member.voiceChannel.join()}
+        }else {voice.join()}
         }else if (args[1] == 'leave'){
           message.member.voiceChannel.leave();
         }
         else if(args[1] == 'play'){
-          if(message.guild.voiceConnection == null){message.reply("Join me to a voice channel first");return;}
+          if(message.guild.voiceConnection == null){voice.join()}
           queue.push(args[2]);
           message.channel.sendMessage("Added to queue :ok_hand:");
           let streamOptions = { seek: 0, volume: 1 };
@@ -199,6 +200,7 @@ command.music = {
           var player = message.guild.voiceConnection.playStream(stream, streamOptions);
           player.on('end', () =>{
             message.member.voiceChannel.leave();
+            
           });
         }
         else if (args[1] == 'queue') {
