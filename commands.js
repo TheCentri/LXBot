@@ -5,6 +5,7 @@ const fs = require('fs');
 const request = require('request');
 const timeStamp = require('time-stamp');
 const ytdl = require('ytdl-core');
+const os = require('os');
 var prefix = "~";
 var queue = [];
 command.ping = {
@@ -183,12 +184,9 @@ command.music = {
     if(args[1] == 'join'){
       var voice = message.member.voiceChannel;
       if(voice == undefined){message.reply("You need to be in a voice channel first");
-        }
-        else if(message.guild.voiceConnection){message.channel.sendMessage("I'm already in a voice channel");
-        }
-        else {message.member.voiceChannel.join()}
-        }
-        else if (args[1] == 'leave'){
+        }else if(message.guild.voiceConnection){message.channel.sendMessage("I'm already in a voice channel");
+        }else {message.member.voiceChannel.join()}
+        }else if (args[1] == 'leave'){
           message.member.voiceChannel.leave();
         }
         else if(args[1] == 'play'){
@@ -199,10 +197,8 @@ command.music = {
           let link = message.content.split(" ").slice(1);
           let stream = ytdl(`${link}`, {filter:'audioonly'});
           var player = message.guild.voiceConnection.playStream(stream, streamOptions);
-          player;
           player.on('end', () =>{
             message.member.voiceChannel.leave();
-            message.channel.sendMessage("Queue finished");
           });
         }
         else if (args[1] == 'queue') {
@@ -222,6 +218,39 @@ command.music = {
          `${prefix}music queue : Shows the current queue\n`+
          `${prefix}music leave : Makes the bot leave the voice channel`);
       }
+  }
+};
+command.system = {
+  "Name":`${prefix}sytem`,
+  "Useage":"Gets stats about the system the bot is running on",
+  "process": function(bot, message){
+    if(message.author.id !== config.owner){message.channel.sendMessage("You are not authorized to run this command");return;}
+    let args = message.content.split(" ");
+    if(args[1] == 'ip'){
+      let ip = os.networkInterfaces();
+      message.channel.sendMessage(ip.eth0[0].address);
+    }else if(args[1] == 'uptime'){
+      message.channel.sendMessage(os.uptime());
+    }else if(args[1] == 'hostname'){
+      message.channel.sendMessage(os.hostname());
+    }else if(args[1] == 'loadavg'){
+      message.channel.sendMessage(os.loadavg());
+    }
+  }
+};
+command.urban = {
+  "Name":`${prefix}urban`,
+  "Useage":"Used this to search urban dictonary",
+  "process":function(bot, message){
+      let word = message.content.split(" ").slice(1);
+      request(`http://api.urbandictionary.com/v0/define?term=${word}`,function(error, response, body) {
+         let result = JSON.parse(body);
+         let reply = `Top 3 definitions in Urban Dictonary for "${word}":\n\n`;
+         for(let i = 1; i <= 3; i++){
+           reply += `\n${i}) ${result.list[i].definition}\n`;
+         }
+         message.channel.sendMessage(reply);
+      });
   }
 };
 
