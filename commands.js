@@ -245,9 +245,13 @@ command.urban = {
       let word = message.content.split(" ").slice(1);
       request(`http://api.urbandictionary.com/v0/define?term=${word}`,function(error, response, body) {
          let result = JSON.parse(body);
-         let reply = `Top 3 definitions in Urban Dictonary for "${word}":\n\n`;
-         for(let i = 1; i <= 3; i++){
-           reply += `\n${i}) ${result.list[i].definition}\n`;
+         if(result.result_type == "no_results"){message.channel.sendMessage(`No results for "${word}"`);return}
+         let reply = `Top definitions in Urban Dictonary for "${word}":\n\n`;
+          let i;
+         for(i in result.list){
+           reply += `\n${parseInt(i)+1}) ${result.list[i].definition}\n`;
+           i++;
+           if(i >= 3){message.channel.sendMessage(reply);return}
          }
          message.channel.sendMessage(reply);
       });
