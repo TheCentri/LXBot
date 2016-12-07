@@ -242,11 +242,11 @@ command.urban = {
   "Name":`${prefix}urban`,
   "Useage":"Used this to search urban dictonary",
   "process":function(bot, message){
-      let word = message.content.split(" ").slice(1);
+      let word = message.content.split(" ").slice(1).join('+');
       request(`http://api.urbandictionary.com/v0/define?term=${word}`,function(error, response, body) {
          let result = JSON.parse(body);
          if(result.result_type == "no_results"){message.channel.sendMessage(`No results for "${word}"`);return}
-         let reply = `Top definitions in Urban Dictonary for "${word}":\n\n`;
+         let reply = `Top definitions in Urban Dictonary for "${message.content.split(" ").slice(1).join(" ")}":\n\n`;
           let i;
          for(i in result.list){
            reply += `\n${parseInt(i)+1}) ${result.list[i].definition}\n`;
