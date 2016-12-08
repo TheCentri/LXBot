@@ -191,7 +191,6 @@ command.music = {
           message.member.voiceChannel.leave();
         }
         else if(args[1] == 'play'){
-          if(message.guild.voiceConnection == null){voice.join()}
           queue.push(args[2]);
           message.channel.sendMessage("Added to queue :ok_hand:");
           let streamOptions = { seek: 0, volume: 1 };
