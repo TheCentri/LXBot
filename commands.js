@@ -59,7 +59,7 @@ command.addcomm = {
   "Useage":"Adds a new command",
   "process": function(bot, message){
   let command = message.content.split(" ").slice(1);
-  let key = JSON.stringify(prefix+command[0]);
+  let key = JSON.stringify(command[0]);
   let value = JSON.stringify(message.content.split(" ").slice(2).join(" "));
   let newCommand = key.toLowerCase()+":"+value;
   let a = JSON.stringify(response);
@@ -182,27 +182,37 @@ command.music = {
   "Useage":"Joics bot to voice channel",
   "process": function(bot,message){
     var args = message.content.split(" ");
+    var voice = message.member.voiceChannel;
     if(args[1] == 'join'){
-      var voice = message.member.voiceChannel;
-      if(voice == undefined){message.reply("You need to be in a voice channel first");
+      if(!voice){message.reply("You need to be in a voice channel first");return;
         }else if(message.guild.voiceConnection){message.channel.sendMessage("I'm already in a voice channel");
         }else {voice.join()}
-        }else if (args[1] == 'leave'){
-          message.member.voiceChannel.leave();
-        }
-        else if(args[1] == 'play'){
-          queue.push(args[2]);
-          message.channel.sendMessage("Added to queue :ok_hand:");
-          let streamOptions = { seek: 0, volume: 1 };
-          let link = message.content.split(" ").slice(1);
-          let stream = ytdl(`${link}`, {filter:'audioonly'});
-          var player = message.guild.voiceConnection.playStream(stream, streamOptions);
-          player.on('end', () =>{
-            message.member.voiceChannel.leave();
-            
-          });
-        }
-        else if (args[1] == 'queue') {
+      }
+      else if (args[1] == 'leave'){
+          voice.leave();
+      }
+      else if(args[1] == 'play'){
+          if(!voice){message.reply("You need to be in a voice channel first");return;}
+          if(!message.guild.voiceConnection){voice.join().then(connection =>{
+                let streamOptions = { seek: 0, volume: 1 };
+                let link = message.content.split(" ").slice(1);
+                let stream = ytdl(`${link}`, {filter:'audioonly'});
+                let player = connection.playStream(stream, streamOptions);
+                player.on('end', () =>{
+                  message.member.voiceChannel.leave();
+                });
+          })}else {
+                let streamOptions = { seek: 0, volume: 1 };
+                let link = message.content.split(" ").slice(1);
+                let stream = ytdl(`${link}`, {filter:'audioonly'});
+                let player = message.guild.voiceConnection.playStream(stream, streamOptions);
+                player.on('end', () =>{
+                  message.member.voiceChannel.leave();
+                });
+          }
+          
+      }
+      else if (args[1] == 'queue') {
           let i = 1;
           var currentQueue = "";
           for(i in queue){
@@ -219,7 +229,7 @@ command.music = {
          `${prefix}music queue : Shows the current queue\n`+
          `${prefix}music leave : Makes the bot leave the voice channel`);
       }
-  }
+}
 };
 command.system = {
   "Name":`${prefix}sytem`,
@@ -258,5 +268,4 @@ command.urban = {
       });
   }
 };
-
 module.exports = command;
