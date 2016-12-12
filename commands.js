@@ -70,9 +70,10 @@ command.addcomm = {
   "Useage": "Adds a new command",
   "process": function(bot, message) {
     let command = message.content.split(" ").slice(1);
-    let key = JSON.stringify(command[0]);
+    let key = JSON.stringify(prefix+command[0]);
     let value = JSON.stringify(message.content.split(" ").slice(2).join(" "));
-    let newCommand = prefix + key.toLowerCase() + ":" + value;
+    let newCommand = key.toLowerCase() + ":" + value;
+    console.log(newCommand);
     let a = JSON.stringify(response);
     a = a.substring(0, a.length - 1);
     let file = fs.createWriteStream('./responses/response.json');
