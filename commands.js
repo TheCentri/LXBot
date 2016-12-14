@@ -300,10 +300,7 @@ command.system = {
       return;
     }
     let args = message.content.split(" ");
-    if (args[1] == 'ip') {
-      let ip = os.networkInterfaces();
-      message.channel.sendMessage(ip.eth0[0].address);
-    } else if (args[1] == 'uptime') {
+    if (args[1] == 'uptime') {
       message.channel.sendMessage(os.uptime());
     } else if (args[1] == 'hostname') {
       message.channel.sendMessage(os.hostname());
