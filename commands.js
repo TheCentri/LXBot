@@ -334,4 +334,54 @@ command.urban = {
     });
   }
 };
+command.ronquote = {
+  "Name":`${prefix}ronquote`,
+  "Useage":"Grabs a Ron Swanson quote",
+  "process": function(bot,message){
+    request('http://ron-swanson-quotes.herokuapp.com/v2/quotes', function(error, response, body) {
+      if(error){console.log(error);}
+      if(!error && response.statusCode == 200){
+      let quote = JSON.parse(body);
+      message.channel.sendMessage(quote+" - Ron Swanson");
+      }
+    });
+  }
+};
+command.xkcd = {
+  "Name":`${prefix}xkcd`,
+  "Useage":"Grabs todays xkcd comic, if you know the comic number add it after the xkcd command",
+  "process": function(bot,message){
+    let args = message.content.split(" ").slice(1);
+    if(args.length === 0){
+      message.channel.sendMessage(`**XKCD Commands\n\n${prefix}xkcd today - Shows todays XKCD comic\n${prefix}xkcd random - Gets a random XKCD comic\n${prefix} comic comic_number - Gets the comic that you specify, replace "comic_number" with your comic number`);
+    }else if(args[0] == "random"){
+      let randomNumber = Math.floor(Math.random() * (1773 - 1 + 1)) + 1;
+      request(`http://xkcd.com/${randomNumber}/info.0.json`, function(error,response,body){
+        if(error){console.log(error);}
+        if(!error && response.statusCode == 200){
+          let comic = JSON.parse(body);
+          message.channel.sendMessage(`Random Comic\n\n**Title**: ${comic.title}\n${comic.img}`);
+        }
+      });
+    }else if (args[0] == "today"){
+      request(`http://xkcd.com/info.0.json`, function(error, response, body) {
+        if(error){console.log(error);}
+        if(!error && response.statusCode == 200){
+         let comic = JSON.parse(body);
+         message.channel.sendMessage(`Random Comic\n\n**Title**: ${comic.title}\n${comic.img}`);
+        }
+      });
+    }else if(isNaN(args[1]) == false){
+      let comicNum = args[1];
+        request(`http://xkcd.com/${comicNum}/info.0.json`, function(error,response,body){
+        if(error){console.log(error);}
+        if(response.statusCode == 404){message.channel.sendMessage("I was unable to find that comic");}
+        if(!error && response.statusCode == 200){
+          let comic = JSON.parse(body);
+          message.channel.sendMessage(`Random Comic\n\n**Title**: ${comic.title}\n${comic.img}`);
+        }
+      });
+    }
+  }
+};
 module.exports = command;
