@@ -353,7 +353,7 @@ command.xkcd = {
   "process": function(bot,message){
     let args = message.content.split(" ").slice(1);
     if(args.length === 0){
-      message.channel.sendMessage(`**XKCD Commands\n\n${prefix}xkcd today - Shows todays XKCD comic\n${prefix}xkcd random - Gets a random XKCD comic\n${prefix} comic comic_number - Gets the comic that you specify, replace "comic_number" with your comic number`);
+      message.channel.sendMessage(`**XKCD Commands**\n\n${prefix}xkcd today - Shows todays XKCD comic\n${prefix}xkcd random - Gets a random XKCD comic\n${prefix}xkcd comic comic_number - Gets the comic that you specify, replace "comic_number" with your comic number`);
     }else if(args[0] == "random"){
       let randomNumber = Math.floor(Math.random() * (1773 - 1 + 1)) + 1;
       request(`http://xkcd.com/${randomNumber}/info.0.json`, function(error,response,body){
