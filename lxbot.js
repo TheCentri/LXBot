@@ -1,3 +1,4 @@
+"use strict";
 const config = require('./config/config.json');
 const commands = require('./commands.js');
 const response = require('./responses/response.json');
@@ -19,7 +20,7 @@ bot.on('message', message => {
   let command = message.content.slice(1).split(" ");
   command = command[0].toLowerCase();
   if (response[input]) {
-    message.channel.sendMessage(response[input]);
+    message.channel.send(response[input]);
     return;
   }
   let cmd = commands[command];

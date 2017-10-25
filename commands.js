@@ -1,3 +1,4 @@
+"use strict";
 var command = {};
 const config = require('./config/config.json');
 const response = require('./responses/response.json');
@@ -12,14 +13,14 @@ command.ping = {
   "Name": `${prefix}ping`,
   "Useage": "Test to make sure bot is alive",
   "process": function(bot, message) {
-    message.channel.sendMessage("Pong!");
+    message.channel.send("Pong!");
   }
 };
 command.say = {
   "Name": `${prefix}say`,
   "Useage": "Bot will repeat your message",
   "process": function(bot, message) {
-    message.channel.sendMessage(message.content.split(" ").slice(1).join(" "));
+    message.channel.send(message.content.split(" ").slice(1).join(" "));
   }
 };
 command.coinflip = {
@@ -28,19 +29,19 @@ command.coinflip = {
   "process": function(bot, message) {
     let flipTimes = message.content.split(" ").slice(1).join(" ");
     if (isNaN(flipTimes)) {
-      message.channel.sendMessage("I need a number");
+      message.channel.send("I need a number");
       return;
     }
     if (flipTimes > 10 || flipTimes < 1) {
-      message.channel.sendMessage("Please use a number between 1 and 10");
+      message.channel.send("Please use a number between 1 and 10");
       return;
     }
     if (flipTimes.length === 0 || flipTimes == 1) {
       let math = Math.floor((Math.random() * 10) + 1);
       if (math >= 5) {
-        message.channel.sendMessage("Heads");
+        message.channel.send("Heads");
       } else {
-        message.channel.sendMessage("Tails");
+        message.channel.send("Tails");
         return;
       }
     } else if (flipTimes >= 2) {
@@ -60,7 +61,7 @@ command.coinflip = {
 
         result += `${i}) ${coinResult}\n`;
       }
-      message.channel.sendMessage(result + `\nTotal\nHeads: ${a}\nTails: ${b}`);
+      message.channel.send(result + `\nTotal\nHeads: ${a}\nTails: ${b}`);
     }
 
   }
@@ -90,7 +91,7 @@ command.weather = {
       if (!error && response.statusCode == 200) {
         let arg = JSON.parse(body);
         if (arg.status == "ZERO_RESULTS") {
-          message.channel.sendMessage("I could not find the location you entered");
+          message.channel.send("I could not find the location you entered");
           return;
         }
         let lat = arg.results[0].geometry.location.lat;
@@ -99,7 +100,7 @@ command.weather = {
         request(weatherURL, function(error, response, body) {
           if (!error && response.statusCode == 200) {
             let forecast = JSON.parse(body);
-            message.channel.sendMessage(
+            message.channel.send(
               `**Weather for today in  ${arg.results[0].address_components[1].long_name}:** ${forecast.hourly.data[0].summary}\n\n` +
               `Tempature: ${forecast.hourly.data[0].apparentTemperature} F\n` +
               `Humidity: ${forecast.hourly.data[0].humidity}\n` +
@@ -123,16 +124,16 @@ command.imdb = {
         if (!error && response.statusCode == 200) {
           let obj = JSON.parse(body);
           if (obj.Response == "False") {
-            message.channel.sendMessage("Unknown Movie or Show");
+            message.channel.send("Unknown Movie or Show");
             return;
           }
-          message.channel.sendMessage(`**IMDB Info**\n\n**Title:** ${obj.Title}\n**Year:** ${obj.Year}\n**Rating:** ${obj.Rated}\n**Plot:** ${obj.Plot}`);
+          message.channel.send(`**IMDB Info**\n\n**Title:** ${obj.Title}\n**Year:** ${obj.Year}\n**Rating:** ${obj.Rated}\n**Plot:** ${obj.Plot}`);
         }
       });
     } else if (args[0] == 'search') {
       let media = message.content.split(" ").slice(2).join("+");
       if (media.length === 0) {
-        message.channel.sendMessage("I need search parameters");
+        message.channel.send("I need search parameters");
         return;
       }
       let imbdURL = `http://www.omdbapi.com/?s=${media}&y=&plot=full&r=json`;
@@ -140,7 +141,7 @@ command.imdb = {
         if (!error && response.statusCode == 200) {
           let obj = JSON.parse(body);
           if (obj.Response == "False") {
-            message.channel.sendMessage("Unknown Movie or Show");
+            message.channel.send("Unknown Movie or Show");
             return;
           }
           let results = `**Showing top results from ${obj.totalResults} Results**\n\n`;
@@ -149,9 +150,9 @@ command.imdb = {
             results += `**${parseInt(i)+1}):**  ${obj.Search[i].Title} (${obj.Search[i].Year}) IMDB ID:  ${obj.Search[i].imdbID}\n`;
             i++;
           }
-          message.channel.sendMessage(results);
+          message.channel.send(results);
         } else {
-          message.channel.sendMessage("No results found");
+          message.channel.send("No results found");
         }
       });
     }
@@ -168,11 +169,11 @@ command.clear = {
     }
     let messageCount = message.content.split(" ").slice(1);
     if (messageCount.length === 0) {
-      message.channel.sendMessage("I need to know how many messages to delete");
+      message.channel.send("I need to know how many messages to delete");
       return;
     }
     if (isNaN(messageCount) === true) {
-      message.channel.sendMessage("I need a number");
+      message.channel.send("I need a number");
       return;
     }
     if (isNaN(messageCount) === false) {
@@ -218,7 +219,7 @@ command.showcommands = {
       list += `\n${i} : ${response[i]}`;
       i++;
     }
-    message.channel.sendMessage("```" + `${list}` + "```");
+    message.channel.send("```" + `${list}` + "```");
   }
 };
 command.music = {
@@ -232,7 +233,7 @@ command.music = {
         message.reply("You need to be in a voice channel first");
         return;
       } else if (message.guild.voiceConnection) {
-        message.channel.sendMessage("I'm already in a voice channel");
+        message.channel.send("I'm already in a voice channel");
       } else {
         voice.join()
       }
@@ -280,9 +281,9 @@ command.music = {
         currentQueue += `\n${i} )${queue[i]}`;
         i++;
       }
-      message.channel.sendMessage(`Current Queue ${currentQueue}\n`);
+      message.channel.send(`Current Queue ${currentQueue}\n`);
     } else if (args[1] == "help" || args[1] === undefined) {
-      message.channel.sendMessage(`**Music commands**:\n\n` +
+      message.channel.send(`**Music commands**:\n\n` +
         `${prefix}music join : Joins the bot to the same voice channel the user is in\n` +
         `${prefix}music play : Plays the requested YouTube link, ` +
         `if a song is already playing it will add it to the queue\n` +
@@ -296,16 +297,16 @@ command.system = {
   "Useage": "Gets stats about the system the bot is running on",
   "process": function(bot, message) {
     if (message.author.id !== config.owner) {
-      message.channel.sendMessage("You are not authorized to run this command");
+      message.channel.send("You are not authorized to run this command");
       return;
     }
     let args = message.content.split(" ");
     if (args[1] == 'uptime') {
-      message.channel.sendMessage(os.uptime());
+      message.channel.send(os.uptime());
     } else if (args[1] == 'hostname') {
-      message.channel.sendMessage(os.hostname());
+      message.channel.send(os.hostname());
     } else if (args[1] == 'loadavg') {
-      message.channel.sendMessage(os.loadavg());
+      message.channel.send(os.loadavg());
     }
   }
 };
@@ -317,7 +318,7 @@ command.urban = {
     request(`http://api.urbandictionary.com/v0/define?term=${word}`, function(error, response, body) {
       let result = JSON.parse(body);
       if (result.result_type == "no_results") {
-        message.channel.sendMessage(`No results for "${word}"`);
+        message.channel.send(`No results for "${word}"`);
         return
       }
       let reply = `Top definitions in Urban Dictonary for "${message.content.split(" ").slice(1).join(" ")}":\n\n`;
@@ -326,11 +327,11 @@ command.urban = {
         reply += `\n${parseInt(i)+1}) ${result.list[i].definition}\n`;
         i++;
         if (i >= 3) {
-          message.channel.sendMessage(reply);
+          message.channel.send(reply);
           return
         }
       }
-      message.channel.sendMessage(reply);
+      message.channel.send(reply);
     });
   }
 };
@@ -342,7 +343,7 @@ command.ronquote = {
       if(error){console.log(error);}
       if(!error && response.statusCode == 200){
       let quote = JSON.parse(body);
-      message.channel.sendMessage(quote+" - Ron Swanson");
+      message.channel.send(quote+" - Ron Swanson");
       }
     });
   }
@@ -353,14 +354,14 @@ command.xkcd = {
   "process": function(bot,message){
     let args = message.content.split(" ").slice(1);
     if(args.length === 0){
-      message.channel.sendMessage(`**XKCD Commands**\n\n${prefix}xkcd today - Shows todays XKCD comic\n${prefix}xkcd random - Gets a random XKCD comic\n${prefix}xkcd comic comic_number - Gets the comic that you specify, replace "comic_number" with your comic number`);
+      message.channel.send(`**XKCD Commands**\n\n${prefix}xkcd today - Shows todays XKCD comic\n${prefix}xkcd random - Gets a random XKCD comic\n${prefix}xkcd comic comic_number - Gets the comic that you specify, replace "comic_number" with your comic number`);
     }else if(args[0] == "random"){
       let randomNumber = Math.floor(Math.random() * (1773 - 1 + 1)) + 1;
       request(`http://xkcd.com/${randomNumber}/info.0.json`, function(error,response,body){
         if(error){console.log(error);}
         if(!error && response.statusCode == 200){
           let comic = JSON.parse(body);
-          message.channel.sendMessage(`Random Comic\n\n**Title**: ${comic.title}\n${comic.img}`);
+          message.channel.send(`Random Comic\n\n**Title**: ${comic.title}\n${comic.img}`);
         }
       });
     }else if (args[0] == "today"){
@@ -368,17 +369,17 @@ command.xkcd = {
         if(error){console.log(error);}
         if(!error && response.statusCode == 200){
          let comic = JSON.parse(body);
-         message.channel.sendMessage(`Random Comic\n\n**Title**: ${comic.title}\n${comic.img}`);
+         message.channel.send(`Random Comic\n\n**Title**: ${comic.title}\n${comic.img}`);
         }
       });
     }else if(isNaN(args[1]) == false){
       let comicNum = args[1];
         request(`http://xkcd.com/${comicNum}/info.0.json`, function(error,response,body){
         if(error){console.log(error);}
-        if(response.statusCode == 404){message.channel.sendMessage("I was unable to find that comic");}
+        if(response.statusCode == 404){message.channel.send("I was unable to find that comic");}
         if(!error && response.statusCode == 200){
           let comic = JSON.parse(body);
-          message.channel.sendMessage(`Random Comic\n\n**Title**: ${comic.title}\n${comic.img}`);
+          message.channel.send(`Random Comic\n\n**Title**: ${comic.title}\n${comic.img}`);
         }
       });
     }
