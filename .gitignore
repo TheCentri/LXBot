@@ -1,3 +1,4 @@
 *.json
 /logs/
 /node_modules/
+!package.json
